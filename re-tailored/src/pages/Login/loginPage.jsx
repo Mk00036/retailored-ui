@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useAuth } from "../../hooks/useAuth";
+import "./loginPage.css"; // Assuming you have a CSS file for styles
 
 const LoginPage = () => {
   const [step, setStep] = useState("login");
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const { requestOtp, loading, error } = useAuth();
-const { verifyOtp } = useAuth();  //   const navigate = useNavigate();
+const { requestOtp, verifyOtp, loading } = useAuth()
+const navigate = useNavigate();
 
   const handleSendOTP = async () => {
     const otp = await requestOtp(mobileNumber);
@@ -30,25 +31,25 @@ const { verifyOtp } = useAuth();  //   const navigate = useNavigate();
     }
   };
 
-const handleVerifyOtp = async () => {
-  const enteredOtp = otp.join('');
-  if (enteredOtp.length === 6) {
-    const response = await verifyOtp(mobileNumber, enteredOtp);
-    if (response?.token) {
-      localStorage.setItem('token', response.token);
-      alert("Login success");
-      // navigate('/dashboard');
-    } else {
-      alert("Invalid OTP");
+  const handleVerifyOtp = async () => {
+    const enteredOtp = otp.join("");
+    if (enteredOtp.length === 6) {
+      const response = await verifyOtp(mobileNumber, enteredOtp);
+      if (response?.token) {
+        localStorage.setItem("token", response.token);
+        navigate('/dashboard'); 
+        alert("valid OTP");
+      } else {
+        alert("Invalid OTP");
+      }
     }
-  } else {
-    alert("Enter 6-digit OTP");
-  }
-};
+  };
 
   return (
     <div className="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen p-4">
-      <div className="w-full max-w-sm sm:max-w-md">
+        
+      <div className="mr-3">
+        <div className="w-full max-w-sm sm:max-w-md  example">
         <div className="text-center mb-5">
           <img
             src="/images/reTailoredLogo.jpg"
@@ -169,6 +170,7 @@ const handleVerifyOtp = async () => {
             />
           </p>
         </div>
+      </div>
       </div>
     </div>
   );
